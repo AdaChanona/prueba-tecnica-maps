@@ -1,35 +1,41 @@
 import React, { useEffect, useState } from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { View, ActivityIndicator} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import LoginScreen from '../LoginScreen';
-import RegisterScreen from '../RegisterScreen';
-import HomeScreen from '../HomeScreen';
-
-const Stack = createNativeStackNavigator();
+import { useRouter } from 'expo-router';
 
 const AppNavigator = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const checkAuth = async () => {
-      const token = await AsyncStorage.getItem('token');
-      setIsAuthenticated(!!token);
+      try {
+        const token = await AsyncStorage.getItem('token');
+        if (token) {
+         router.push('/HomeScreen');// Navega a Home si el token existe
+        } else {
+          router.push('/LoginScreen'); // Navega al login si no hay token
+        }
+      } catch (error) {
+        console.error('Error checking auth:', error);
+      } finally {
+        setIsLoading(false); // Termina el estado de carga
+      }
     };
-    checkAuth();
-  }, []);
 
-  return (
-    <Stack.Navigator>
-      {isAuthenticated ? (
-        <Stack.Screen name="Home" component={HomeScreen} />
-      ) : (
-        <>
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="Register" component={RegisterScreen} />
-        </>
-      )}
-    </Stack.Navigator>
-  );
+    checkAuth();
+  }, [router]);
+
+  if (isLoading) {
+    // Muestra un indicador de carga mientras se verifica la autenticación
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  return null; // No se renderiza nada ya que el redireccionamiento está manejado
 };
 
 export default AppNavigator;

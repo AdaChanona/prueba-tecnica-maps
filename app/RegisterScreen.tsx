@@ -2,7 +2,6 @@ import React from 'react';
 import {
   View,
   TextInput,
-  Button,
   Alert,
   StyleSheet,
   Text,
@@ -11,11 +10,7 @@ import {
 } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { register } from '../src/api/auth';
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../src/navigation/types';
-
-type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Register'>;
+import { useRouter } from 'expo-router';
 
 interface FormData {
   first_name: string;
@@ -26,7 +21,7 @@ interface FormData {
 }
 
 const RegisterScreen = () => {
-  const navigation = useNavigation<NavigationProp>();
+  const router = useRouter();
   const {
     control,
     handleSubmit,
@@ -37,7 +32,7 @@ const RegisterScreen = () => {
     try {
       await register(data); // Llama al endpoint de registro
       Alert.alert('Registro exitoso', 'Ahora puedes iniciar sesión');
-      navigation.navigate('Login'); // Redirige a la pantalla de login
+      router.push('/LoginScreen'); // Redirige a la pantalla de login
     } catch (error: any) {
       Alert.alert('Error', error?.message || 'No se pudo registrar el usuario');
     }

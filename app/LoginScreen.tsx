@@ -9,12 +9,8 @@ import {
   ScrollView,
 } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
-import { login } from '../src/api/auth'; // Importa la función de login
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../src/navigation/types';
-
-type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
+import { login } from '../src/api/auth'; // Importa la función de login;
+import { useRouter } from 'expo-router';
 
 interface FormData {
   email: string;
@@ -22,7 +18,7 @@ interface FormData {
 }
 
 const LoginScreen = () => {
-  const navigation = useNavigation<NavigationProp>();
+  const router = useRouter();
   const {
     control,
     handleSubmit,
@@ -34,7 +30,7 @@ const LoginScreen = () => {
       const response = await login(data); // Llama al endpoint de login
       Alert.alert('Login exitoso', 'Bienvenido de nuevo');
       // Guarda el token o realiza cualquier acción necesaria
-      navigation.navigate('Home'); // Redirige a la pantalla principal
+      router.push('/HomeScreen'); // Redirige a la pantalla principal
     } catch (error: any) {
       Alert.alert('Error', error?.message || 'No se pudo iniciar sesión');
     }
@@ -117,7 +113,7 @@ const LoginScreen = () => {
       {/* Register Link */}
       <View style={styles.registerContainer}>
         <Text style={styles.registerText}>Don't have an account?</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+        <TouchableOpacity onPress={() => router.push('/RegisterScreen')}>
           <Text style={styles.registerLink}> Register here</Text>
         </TouchableOpacity>
       </View>

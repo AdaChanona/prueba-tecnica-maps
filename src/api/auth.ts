@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 
 // Configuración base de Axios
-const API_URL = "http://127.0.0.1:8000/api"; // Cambia el puerto si es necesario
+const API_URL = "http://192.168.100.144:8000/api"; // Cambia el puerto si es necesario
 
 const api = axios.create({
   baseURL: API_URL,
