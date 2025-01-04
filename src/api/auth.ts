@@ -1,8 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 
 // Configuración base de Axios
-const API_URL = "http://192.168.100.144:8000/api"; // Cambia el puerto si es necesario
-
+const API_URL = "https://maxcloud.mx/api"; 
 const api = axios.create({
   baseURL: API_URL,
   headers: {

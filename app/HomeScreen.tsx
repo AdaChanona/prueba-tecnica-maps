@@ -7,24 +7,17 @@ import { logout } from '../src/api/auth';
 const HomeScreen = () => {
   const router = useRouter();
 
-  useEffect(() => {
-    const checkToken = async () => {
-      const token = await AsyncStorage.getItem('token');
-    };
-    checkToken();
-  }, []);
-
   const handleLogout = async () => {
     try {
       const token = await AsyncStorage.getItem('token');
       if (token) {
-        await logout(token);
+        const response = await logout(token);
+        console.log('Logout response:', response);
         await AsyncStorage.removeItem('token');
-        router.push('/LoginScreen');
-      } else {
-        router.push('/LoginScreen'); // Redirect to login if no token is found
+        router.replace('/LoginScreen');
       }
     } catch (error) {
+      console.error('Error logging out:', error);
     }
   };
 

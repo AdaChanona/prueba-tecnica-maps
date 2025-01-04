@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   TextInput,
@@ -7,10 +7,12 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
+  BackHandler,
 } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { login } from '../src/api/auth'; // Importa la función de login;
 import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface FormData {
   email: string;
@@ -25,12 +27,32 @@ const LoginScreen = () => {
     formState: { errors },
   } = useForm<FormData>();
 
+  useEffect(() => {
+    const backAction = () => {
+      // Muestra un mensaje de confirmación o simplemente bloquea el retroceso
+      Alert.alert('Salir de la app', '¿Estás seguro que deseas salir?', [
+        {
+          text: 'Cancelar',
+          onPress: () => null,
+          style: 'cancel',
+        },
+        { text: 'Salir', onPress: () => BackHandler.exitApp() },
+      ]);
+      return true; // Prevenir el retroceso predeterminado
+    };
+
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+
+    return () => backHandler.remove();
+  }, []);
+
   const onSubmit = async (data: FormData) => {
     try {
       const response = await login(data); // Llama al endpoint de login
       Alert.alert('Login exitoso', 'Bienvenido de nuevo');
+      AsyncStorage.setItem('token', response.access_token);
       // Guarda el token o realiza cualquier acción necesaria
-      router.push('/HomeScreen'); // Redirige a la pantalla principal
+      router.replace('/HomeScreen'); // Redirige a la pantalla principal
     } catch (error: any) {
       Alert.alert('Error', error?.message || 'No se pudo iniciar sesión');
     }
@@ -124,7 +146,8 @@ const LoginScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    padding: 20,
+    padding: 30,
+    paddingTop:80,
     backgroundColor: '#F5F7FA',
   },
   iconContainer: {

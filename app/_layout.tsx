@@ -30,7 +30,18 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen 
+          name="LoginScreen" 
+          options={{ headerShown: false }} // Ocultar encabezado en el login
+        />
+        <Stack.Screen 
+          name="HomeScreen" 
+          options={{ headerShown: false}}
+        />
+        <Stack.Screen 
+          name="RegisterScreen" 
+          options={{ headerShown: true, title: 'Registro' }} // Mostrar encabezado en Home
+        />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />
